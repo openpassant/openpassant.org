@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-default-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenPassant: open-source digital product passports</title>
+<meta name="description" content="OpenPassant is an Apache 2.0 toolkit for issuing, resolving and verifying EU Digital Product Passports, with tamper-evidence anchored on a public blockchain.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#14213A">
+<script>
+/* Apply a saved theme before first paint. Nothing else is stored. */
+try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+<link rel="preload" href="assets/fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/base.css">
+<link rel="stylesheet" href="assets/css/page.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- TODO before launch: github.com/openpassant and @openpassant/core are intended names, not yet registered. -->
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="OpenPassant home">
+      <img class="only-light" src="assets/img/passant-icon.svg" alt="" width="36" height="36">
+      <img class="only-dark" src="assets/img/passant-icon-reversed.svg" alt="" width="36" height="36">
+      <span class="wordmark"><span class="open">Open</span>Passant</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#verify">Spec</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#contribute">Contribute</a>
+      <button class="theme-toggle" type="button" data-theme-toggle>Light mode</button>
+      <a class="btn btn--small" href="https://github.com/openpassant">GitHub</a>
+    </nav>
+    <details class="menu">
+      <summary>Menu</summary>
+      <div class="menu-panel">
+        <a href="#verify">Spec</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#contribute">Contribute</a>
+        <a href="https://github.com/openpassant">GitHub</a>
+        <button class="theme-toggle" type="button" data-theme-toggle>Light mode</button>
+      </div>
+    </details>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="badge badge--progress">Pre-alpha, M1 in progress</span>
+      <h1>Open-source digital product passports.</h1>
+      <p class="lede">OpenPassant is an Apache 2.0 toolkit for issuing, resolving and verifying EU Digital Product Passports, with tamper-evidence anchored on a public blockchain. First target: the EU battery passport, mandatory from 18 February 2027.</p>
+      <div class="actions">
+        <a class="btn" href="https://github.com/openpassant">View on GitHub</a>
+        <a class="btn btn--ghost" href="https://github.com/openpassant/openpassant/blob/main/docs/crypto-spec.md">Read the spec</a>
+      </div>
+    </div>
+    <div class="code">
+      <div class="code-bar"><span>verify.ts</span><button type="button" data-copy="snippet">Copy</button></div>
+<pre><code id="snippet"><span class="tok-k">import</span> {
+  computeBundleRoot,
+  toHex,
+} <span class="tok-k">from</span> <span class="tok-s">'@openpassant/core'</span>;
+
+<span class="tok-c">// bundle: served next to every passport</span>
+<span class="tok-k">const</span> result = computeBundleRoot(bundle);
+
+<span class="tok-k">if</span> (result.ok) {
+  <span class="tok-c">// compare with the root anchored on-chain</span>
+  console.log(toHex(result.root));
+  console.log(result.checkedTiers); <span class="tok-c">// ['public']</span>
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<section class="band band--alt" id="packages">
+  <div class="wrap">
+    <div class="section-head"><h2>Four parts, one repository.</h2></div>
+    <div class="table-scroll">
+      <table class="packages">
+        <thead><tr><th scope="col">Package</th><th scope="col">What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>schema</code></th><td>The battery passport as JSON Schema, every field tagged with its access tier.</td></tr>
+          <tr><th scope="row"><code>core</code></th><td>Canonicalisation, salted per-tier hashing, Merkle trees, proof verification. Runs unchanged in Node and the browser.</td></tr>
+          <tr><th scope="row"><code>server</code></th><td>Issuing API and resolver: a QR scan in, the right view of the passport out.</td></tr>
+          <tr><th scope="row"><code>adapter-vechain</code></th><td>Anchors Merkle roots on VeChainThor. Behind an interface, so other chains or RFC 3161 timestamping can be added.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="verify">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>From a QR scan to an on-chain root.</h2>
+      <p class="lede">Verification is a pure function. The same code runs on the server and in the visitor's browser, so a passport page can check itself without trusting the server that sent it.</p>
+    </div>
+    <div class="seq">
+      <div class="seq-lanes" aria-hidden="true"><span>Browser</span><span>Resolver</span><span>VeChain node</span></div>
+      <ol class="seq-steps" role="list">
+        <li class="from-1-to-2"><div class="seq-msg"><span class="route">Browser to resolver</span>Requests the passport for the caller's access tier.</div></li>
+        <li class="from-2-to-1"><div class="seq-msg"><span class="route">Resolver to browser</span>Returns that tier's JSON and salt, the other tiers' hashes, a Merkle proof and a transaction id.</div></li>
+        <li class="self-1"><div class="seq-msg"><span class="route">In the browser</span>Hashes its tier, combines the three tier hashes into the leaf, folds the proof to a root.</div></li>
+        <li class="from-1-to-3"><div class="seq-msg"><span class="route">Browser to VeChain node</span>Reads the anchored root from the chain by transaction id.</div></li>
+        <li class="self-1 seq-done"><div class="seq-msg"><span class="route">In the browser</span>Roots match: verified.</div></li>
+      </ol>
+    </div>
+    <p class="small seq-key">Each access tier is hashed separately, so a member of the public can verify the public view without learning anything about the restricted data.</p>
+  </div>
+</section>
+
+<section class="band band--alt" id="principles">
+  <div class="wrap">
+    <div class="section-head"><h2>Decisions we will not revisit.</h2></div>
+    <dl class="ruled">
+      <div class="ruled-row"><dt>Hashes on-chain, data off-chain</dt><dd>Only 32-byte Merkle roots are anchored. Nothing that could ever need erasing touches the ledger.</dd></div>
+      <div class="ruled-row"><dt>Every tier verifiable on its own</dt><dd>Salted per-tier hashes combine into one leaf. No tier has to trust another.</dd></div>
+      <div class="ruled-row"><dt>The operator owns the address</dt><dd>Passports resolve on the operator's own subdomain, so they outlive any host, including us.</dd></div>
+      <div class="ruled-row"><dt>Chain-agnostic by construction</dt><dd>One adapter package imports chain code. Nothing else may.</dd></div>
+      <div class="ruled-row"><dt>Standards over inventions</dt><dd>GS1 Digital Link identifiers, RFC 8785 canonical JSON, an RFC 6962 tree shape, field definitions from the regulation and DIN DKE SPEC 99100.</dd></div>
+      <div class="ruled-row"><dt>Spec first, with test vectors</dt><dd>The byte-exact spec and its vectors are normative. Code that disagrees with them is wrong.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="band" id="roadmap">
+  <div class="wrap">
+    <div class="section-head"><h2>Where things stand.</h2></div>
+    <div class="table-scroll">
+      <!-- Edit by hand. Status classes: badge--planned, badge--progress, badge--ok (done). -->
+      <table class="roadmap">
+        <thead><tr><th scope="col">Milestone</th><th scope="col">Scope</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">M0</th><td>Battery passport schema with access tiers</td><td><span class="badge badge--progress">In progress</span></td></tr>
+          <tr><th scope="row">M1</th><td><code>core</code>: hashing, Merkle, verification, test vectors</td><td><span class="badge badge--progress">In progress</span></td></tr>
+          <tr><th scope="row">M2</th><td><code>server</code>: models, batch issuing, versions, PostgreSQL</td><td><span class="badge badge--planned">Planned</span></td></tr>
+          <tr><th scope="row">M3</th><td><code>adapter-vechain</code>: registry contract, batched anchoring, fee delegation</td><td><span class="badge badge--planned">Planned</span></td></tr>
+          <tr><th scope="row">M4</th><td>Resolver, public passport page, in-browser verification</td><td><span class="badge badge--planned">Planned</span></td></tr>
+          <tr><th scope="row">M5</th><td>Docker Compose, demo data, one-hour self-hosted setup</td><td><span class="badge badge--planned">Planned</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="band band--alt" id="contribute">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Early, and open to help.</h2>
+      <p class="lede">The most useful contributions right now are reviews of the crypto spec, checks of the schema against the regulation text, and independent implementations of the test vectors in other languages.</p>
+    </div>
+    <div class="actions" style="margin-top: 0">
+      <a class="btn" href="https://github.com/openpassant/openpassant/issues">Open issues</a>
+      <a class="btn btn--ghost" href="https://github.com/openpassant/openpassant/blob/main/docs/crypto-spec.md">Read the crypto spec</a>
+      <a class="btn btn--ghost" href="https://github.com/openpassant/openpassant/blob/main/CONTRIBUTING.md">Contributor guide</a>
+    </div>
+    <p class="small" style="margin-top: var(--space-8)">Contributions are accepted under Apache 2.0 with a lightweight contributor licence agreement.</p>
+  </div>
+</section>
+
+<section class="band" id="hosted">
+  <div class="wrap">
+    <div class="disclosure prose">
+      <h2>Said up front.</h2>
+      <p style="margin-top: var(--space-6)">OpenPassant is, and will stay, open source under Apache 2.0. The maintainers also plan a hosted service, Passant, for companies that would rather not run it themselves. The hosted service runs this same code. We are telling you now so it is never a surprise later.</p>
+      <p><a href="https://passant.io">About the hosted service at passant.io</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <a class="brand" href="/" aria-label="OpenPassant home">
+        <img class="only-light" src="assets/img/passant-icon.svg" alt="" width="36" height="36">
+        <img class="only-dark" src="assets/img/passant-icon-reversed.svg" alt="" width="36" height="36">
+        <span class="wordmark"><span class="open">Open</span>Passant</span>
+      </a>
+      <p>Licensed under Apache 2.0.</p>
+    </div>
+    <nav class="footer-links" aria-label="Footer">
+      <a href="https://github.com/openpassant">GitHub</a>
+      <a href="https://github.com/openpassant/openpassant/blob/main/docs/crypto-spec.md">Spec</a>
+      <a href="https://github.com/openpassant/openpassant/blob/main/CONTRIBUTING.md">Contributor guide</a>
+      <a href="https://github.com/openpassant/openpassant/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a>
+    </nav>
+    <div class="footer-note">
+      <span>An independent project. Not affiliated with or endorsed by the VeChain Foundation or the European Commission.</span>
+      <span>© 2026 OpenPassant contributors</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js" defer></script>
+</body>
+</html>

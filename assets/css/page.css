@@ -1,0 +1,55 @@
+/* openpassant.org page styles. Code and diagrams carry this page. */
+
+.hero { padding-block: clamp(3rem, 7vw, 5.5rem) clamp(3.5rem, 8vw, 6rem); }
+.hero-grid { display: grid; gap: clamp(2.5rem, 5vw, 4rem); align-items: center; }
+@media (min-width: 62rem) { .hero-grid { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); } }
+.hero h1 { max-width: 12ch; margin-top: var(--space-6); }
+.hero .lede { margin-top: var(--space-8); }
+
+/* ---------- Code ---------- */
+.code { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.code-bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4); border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 0.8rem; color: var(--fg-muted); }
+.code-bar button { font: inherit; font-family: var(--font-body); font-weight: 600; font-size: var(--text-sm); color: var(--fg); background: none; border: 1px solid var(--border); border-radius: var(--radius); padding: 0.3rem 0.7rem; cursor: pointer; min-width: 4.5rem; }
+.code-bar button:hover { background: var(--bg); }
+.code pre { margin: 0; padding: var(--space-6); overflow-x: auto; font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.65; color: var(--fg); tab-size: 2; }
+.tok-k { color: var(--accent-text); }
+.tok-s { color: var(--ok); }
+.tok-c { color: var(--fg-muted); }
+
+/* ---------- Packages ---------- */
+.packages th code { font-size: 1rem; color: var(--fg); }
+
+/* ---------- Sequence: three lanes, five real steps ---------- */
+.seq { --lanes: 3; }
+.seq-lanes, .seq-steps li { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--space-6); }
+.seq-lanes { font-weight: 600; font-size: var(--text-sm); padding-bottom: var(--space-4); border-bottom: 1px solid var(--border); }
+.seq-lanes span { display: flex; align-items: center; gap: var(--space-2); }
+.seq-lanes span::before { content: ""; width: 0.5rem; height: 0.5rem; background: var(--accent-shape); }
+.seq-steps { counter-reset: seq; position: relative; }
+.seq-steps li { counter-increment: seq; padding-block: var(--space-4); border-bottom: 1px solid var(--border); align-items: center; }
+.seq-msg { position: relative; padding: var(--space-3) var(--space-4); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); font-size: var(--text-sm); line-height: 1.45; }
+.seq-msg::before { content: counter(seq); font-family: var(--font-mono); color: var(--accent-text); margin-right: 0.6rem; }
+.seq-msg .route { display: none; }
+.from-1-to-2 .seq-msg, .from-2-to-1 .seq-msg { grid-column: 1 / 3; }
+.from-1-to-3 .seq-msg, .from-3-to-1 .seq-msg { grid-column: 1 / 4; }
+.self-1 .seq-msg { grid-column: 1 / 2; }
+/* direction markers: a gold edge on the receiving side */
+.from-1-to-2 .seq-msg, .from-1-to-3 .seq-msg { border-right: 3px solid var(--accent-shape); }
+.from-2-to-1 .seq-msg, .from-3-to-1 .seq-msg { border-left: 3px solid var(--accent-shape); }
+.self-1 .seq-msg { border-style: dashed; }
+.seq-done .seq-msg { border-color: var(--ok); color: var(--ok); font-weight: 600; }
+.seq-done .seq-msg::before { color: var(--ok); }
+@media (max-width: 40rem) {
+  .seq-lanes { display: none; }
+  .seq-steps li { display: block; }
+  .seq-msg .route { display: block; font-weight: 600; color: var(--fg-muted); font-size: 0.78rem; margin-bottom: 0.2rem; }
+  .from-1-to-2 .seq-msg, .from-1-to-3 .seq-msg, .from-2-to-1 .seq-msg, .from-3-to-1 .seq-msg { border-right-width: 1px; border-left: 3px solid var(--accent-shape); }
+}
+.seq-key { margin-top: var(--space-4); }
+
+/* ---------- Roadmap ---------- */
+.roadmap td:last-child { white-space: nowrap; }
+.roadmap th { font-family: var(--font-mono); font-weight: 400; color: var(--fg); }
+
+/* ---------- Disclosure ---------- */
+.disclosure { border-left: 3px solid var(--accent-shape); padding-left: clamp(1.25rem, 4vw, 2.5rem); }
