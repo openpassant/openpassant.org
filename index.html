@@ -74,7 +74,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
 <span class="tok-k">if</span> (result.ok) {
   <span class="tok-c">// compare with the root anchored on-chain</span>
   console.log(toHex(result.root));
-  console.log(result.checkedTiers); <span class="tok-c">// ['public']</span>
+  console.log(result.checkedSections); <span class="tok-c">// ['public']</span>
 }</code></pre>
     </div>
   </div>
@@ -87,8 +87,8 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
       <table class="packages">
         <thead><tr><th scope="col">Package</th><th scope="col">What it does</th></tr></thead>
         <tbody>
-          <tr><th scope="row"><code>schema</code></th><td>The battery passport as JSON Schema, every field tagged with its access tier.</td></tr>
-          <tr><th scope="row"><code>core</code></th><td>Canonicalisation, salted per-tier hashing, Merkle trees, proof verification. Runs unchanged in Node and the browser.</td></tr>
+          <tr><th scope="row"><code>schema</code></th><td>The battery passport as JSON Schema, every field tagged with its content section.</td></tr>
+          <tr><th scope="row"><code>core</code></th><td>Canonicalisation, salted per-section hashing, Merkle trees, proof verification. Runs unchanged in Node and the browser.</td></tr>
           <tr><th scope="row"><code>server</code></th><td>Issuing API and resolver: a QR scan in, the right view of the passport out.</td></tr>
           <tr><th scope="row"><code>adapter-vechain</code></th><td>Anchors Merkle roots on VeChainThor. Behind an interface, so other chains or RFC 3161 timestamping can be added.</td></tr>
         </tbody>
@@ -106,14 +106,14 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
     <div class="seq">
       <div class="seq-lanes" aria-hidden="true"><span>Browser</span><span>Resolver</span><span>VeChain node</span></div>
       <ol class="seq-steps" role="list">
-        <li class="from-1-to-2"><div class="seq-msg"><span class="route">Browser to resolver</span>Requests the passport for the caller's access tier.</div></li>
-        <li class="from-2-to-1"><div class="seq-msg"><span class="route">Resolver to browser</span>Returns that tier's JSON and salt, the other tiers' hashes, a Merkle proof and a transaction id.</div></li>
-        <li class="self-1"><div class="seq-msg"><span class="route">In the browser</span>Hashes its tier, combines the three tier hashes into the leaf, folds the proof to a root.</div></li>
+        <li class="from-1-to-2"><div class="seq-msg"><span class="route">Browser to resolver</span>Requests the passport for the caller's role.</div></li>
+        <li class="from-2-to-1"><div class="seq-msg"><span class="route">Resolver to browser</span>Returns the readable sections' JSON and salts, the other sections' hashes, a Merkle proof and a transaction id.</div></li>
+        <li class="self-1"><div class="seq-msg"><span class="route">In the browser</span>Hashes its sections, combines the four section hashes into the leaf, folds the proof to a root.</div></li>
         <li class="from-1-to-3"><div class="seq-msg"><span class="route">Browser to VeChain node</span>Reads the anchored root from the chain by transaction id.</div></li>
         <li class="self-1 seq-done"><div class="seq-msg"><span class="route">In the browser</span>Roots match: verified.</div></li>
       </ol>
     </div>
-    <p class="small seq-key">Each access tier is hashed separately, so a member of the public can verify the public view without learning anything about the restricted data.</p>
+    <p class="small seq-key">Each content section is hashed separately, so a member of the public can verify the public view without learning anything about the restricted data.</p>
   </div>
 </section>
 
@@ -122,7 +122,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
     <div class="section-head"><h2>Decisions we will not revisit.</h2></div>
     <dl class="ruled">
       <div class="ruled-row"><dt>Hashes on-chain, data off-chain</dt><dd>Only 32-byte Merkle roots are anchored. Nothing that could ever need erasing touches the ledger.</dd></div>
-      <div class="ruled-row"><dt>Every tier verifiable on its own</dt><dd>Salted per-tier hashes combine into one leaf. No tier has to trust another.</dd></div>
+      <div class="ruled-row"><dt>Every section verifiable on its own</dt><dd>Salted per-section hashes combine into one leaf. Each reader verifies exactly the sections they may see.</dd></div>
       <div class="ruled-row"><dt>The operator owns the address</dt><dd>Passports resolve on the operator's own subdomain, so they outlive any host, including us.</dd></div>
       <div class="ruled-row"><dt>Chain-agnostic by construction</dt><dd>One adapter package imports chain code. Nothing else may.</dd></div>
       <div class="ruled-row"><dt>Standards over inventions</dt><dd>GS1 Digital Link identifiers, RFC 8785 canonical JSON, an RFC 6962 tree shape, field definitions from the regulation and DIN DKE SPEC 99100.</dd></div>
@@ -139,7 +139,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
       <table class="roadmap">
         <thead><tr><th scope="col">Milestone</th><th scope="col">Scope</th><th scope="col">Status</th></tr></thead>
         <tbody>
-          <tr><th scope="row">M0</th><td>Battery passport schema with access tiers</td><td><span class="badge badge--progress">In progress</span></td></tr>
+          <tr><th scope="row">M0</th><td>Battery passport schema with content sections</td><td><span class="badge badge--progress">In progress</span></td></tr>
           <tr><th scope="row">M1</th><td><code>core</code>: hashing, Merkle, verification, test vectors</td><td><span class="badge badge--ok">Done</span></td></tr>
           <tr><th scope="row">M2</th><td><code>server</code>: models, batch issuing, versions, PostgreSQL</td><td><span class="badge badge--planned">Planned</span></td></tr>
           <tr><th scope="row">M3</th><td><code>adapter-vechain</code>: registry contract, batched anchoring, fee delegation</td><td><span class="badge badge--planned">Planned</span></td></tr>
@@ -148,6 +148,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
         </tbody>
       </table>
     </div>
+    <p class="small" style="margin-top: var(--space-8)">20 September 2026: the crypto spec was revised to <code>passant-crypto/2</code> — four salted section hashes per passport version, one per Annex XIII content point, replacing the earlier three access-tier layout after the access rules of Regulation (EU) 2023/1542 were verified against the EUR-Lex text. Nothing had been anchored under the old layout, so nothing breaks.</p>
   </div>
 </section>
 
