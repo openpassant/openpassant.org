@@ -53,7 +53,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="badge badge--progress">Pre-alpha, M1 complete</span>
+      <span class="badge badge--ok">v0.1.0 — MVP slice complete</span>
       <h1>Open-source digital product passports.</h1>
       <p class="lede">OpenPassant is an Apache 2.0 toolkit for issuing, resolving and verifying EU Digital Product Passports, with tamper-evidence anchored on a public blockchain. First target: the EU battery passport, mandatory from 18 February 2027.</p>
       <div class="actions">
@@ -82,7 +82,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
 
 <section class="band band--alt" id="packages">
   <div class="wrap">
-    <div class="section-head"><h2>Four parts, one repository.</h2></div>
+    <div class="section-head"><h2>Five parts, one repository.</h2></div>
     <div class="table-scroll">
       <table class="packages">
         <thead><tr><th scope="col">Package</th><th scope="col">What it does</th></tr></thead>
@@ -91,6 +91,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
           <tr><th scope="row"><code>core</code></th><td>Canonicalisation, salted per-section hashing, Merkle trees, proof verification. Runs unchanged in Node and the browser.</td></tr>
           <tr><th scope="row"><code>server</code></th><td>Issuing API and resolver: a QR scan in, the right view of the passport out.</td></tr>
           <tr><th scope="row"><code>adapter-vechain</code></th><td>Anchors Merkle roots on VeChainThor. Behind an interface, so other chains or RFC 3161 timestamping can be added.</td></tr>
+          <tr><th scope="row"><code>web</code></th><td>The in-browser verifier: every passport page checks itself against the chain without trusting the server that served it.</td></tr>
         </tbody>
       </table>
     </div>
@@ -139,16 +140,17 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
       <table class="roadmap">
         <thead><tr><th scope="col">Milestone</th><th scope="col">Scope</th><th scope="col">Status</th></tr></thead>
         <tbody>
-          <tr><th scope="row">M0</th><td>Battery passport schema with content sections</td><td><span class="badge badge--progress">In progress</span></td></tr>
+          <tr><th scope="row">M0</th><td>Battery passport schema with content sections</td><td><span class="badge badge--ok">Done</span></td></tr>
           <tr><th scope="row">M1</th><td><code>core</code>: hashing, Merkle, verification, test vectors</td><td><span class="badge badge--ok">Done</span></td></tr>
-          <tr><th scope="row">M2</th><td><code>server</code>: models, batch issuing, versions, PostgreSQL</td><td><span class="badge badge--planned">Planned</span></td></tr>
-          <tr><th scope="row">M3</th><td><code>adapter-vechain</code>: registry contract, batched anchoring, fee delegation</td><td><span class="badge badge--planned">Planned</span></td></tr>
-          <tr><th scope="row">M4</th><td>Resolver, public passport page, in-browser verification</td><td><span class="badge badge--planned">Planned</span></td></tr>
-          <tr><th scope="row">M5</th><td>Docker Compose, demo data, one-hour self-hosted setup</td><td><span class="badge badge--planned">Planned</span></td></tr>
+          <tr><th scope="row">M2</th><td><code>server</code>: models, batch issuing, versions, PostgreSQL</td><td><span class="badge badge--ok">Done</span></td></tr>
+          <tr><th scope="row">M3</th><td><code>adapter-vechain</code>: registry contract, batched anchoring, fee delegation</td><td><span class="badge badge--ok">Done</span></td></tr>
+          <tr><th scope="row">M4</th><td>Resolver, public passport page, in-browser verification</td><td><span class="badge badge--ok">Done</span></td></tr>
+          <tr><th scope="row">M5</th><td>Docker Compose, demo data, one-hour self-hosted setup</td><td><span class="badge badge--ok">Done</span></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="small" style="margin-top: var(--space-8)">20 September 2026: the crypto spec was revised to <code>passant-crypto/2</code> — four salted section hashes per passport version, one per Annex XIII content point, replacing the earlier three access-tier layout after the access rules of Regulation (EU) 2023/1542 were verified against the EUR-Lex text. Nothing had been anchored under the old layout, so nothing breaks.</p>
+    <p class="small" style="margin-top: var(--space-8)">30 September 2026: all six milestones of the MVP slice are complete and tagged v0.1.0 — issue a passport, anchor it on the VeChain testnet, scan the QR, and watch the page verify itself in your browser. Next: v0.2, starting with restricted-section access once the Article 77(9) implementing act is adopted.</p>
+    <p class="small" style="margin-top: var(--space-4)">20 September 2026: the crypto spec was revised to <code>passant-crypto/2</code> — four salted section hashes per passport version, one per Annex XIII content point, replacing the earlier three access-tier layout after the access rules of Regulation (EU) 2023/1542 were verified against the EUR-Lex text. Nothing had been anchored under the old layout, so nothing breaks.</p>
   </div>
 </section>
 
