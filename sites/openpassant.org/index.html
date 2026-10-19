@@ -53,7 +53,7 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="badge badge--ok">v0.1.0 — MVP slice complete</span>
+      <span class="badge badge--ok">v0.1.2 — live at id.passant.io</span>
       <h1>Open-source digital product passports.</h1>
       <p class="lede">OpenPassant is an Apache 2.0 toolkit for issuing, resolving and verifying EU Digital Product Passports, with tamper-evidence anchored on a public blockchain. First target: the EU battery passport, mandatory from 18 February 2027.</p>
       <div class="actions">
@@ -149,7 +149,8 @@ try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') 
         </tbody>
       </table>
     </div>
-    <p class="small" style="margin-top: var(--space-8)">30 September 2026: all six milestones of the MVP slice are complete and tagged v0.1.0 — issue a passport, anchor it on the VeChain testnet, scan the QR, and watch the page verify itself in your browser. Next: v0.2, starting with restricted-section access once the Article 77(9) implementing act is adopted.</p>
+    <p class="small" style="margin-top: var(--space-8)">18 October 2026: the reference instance is live at <a href="https://id.passant.io/01/09506000134369/21/DEMO-0001">id.passant.io</a>, running v0.1.2 with 100 demo passports anchored on the VeChain testnet — scan one and verify it from your phone. v0.1.1 added the production Compose override with automatic TLS and a deployment guide; v0.1.2 fixes a start-up failure when <code>VECHAIN_PUBLIC_NODE_URL</code> is left empty. Next: v0.2, starting with EU registry identifier registration now that the registry API is live, and restricted-section access once the Article 77(9) implementing act is adopted.</p>
+    <p class="small" style="margin-top: var(--space-4)">30 September 2026: all six milestones of the MVP slice are complete and tagged v0.1.0 — issue a passport, anchor it on the VeChain testnet, scan the QR, and watch the page verify itself in your browser.</p>
     <p class="small" style="margin-top: var(--space-4)">20 September 2026: the crypto spec was revised to <code>passant-crypto/2</code> — four salted section hashes per passport version, one per Annex XIII content point, replacing the earlier three access-tier layout after the access rules of Regulation (EU) 2023/1542 were verified against the EUR-Lex text. Nothing had been anchored under the old layout, so nothing breaks.</p>
   </div>
 </section>
